@@ -20,7 +20,7 @@ import {
 } from 'react-navigation'
 
 import Home from './app/modules/home'
-
+import NearBy from './app/modules/nearby'
 
 
 Home.navigationOptions = {
@@ -33,11 +33,8 @@ const MyNotificationsScreen = ({ navigation }) => {
   return <View><Text>hello world</Text></View>
 }
 
-const Nearby = ({navigation}) => {
-  return <View><Text>Nearby</Text></View> 
-}
 
-Nearby.navigationOptions = {
+NearBy.navigationOptions = {
   tabBarLabel: '附近',
   tabBarIcon: ({ tintColor }) => (
     <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe770;</Text>
@@ -88,7 +85,7 @@ const MyApp = TabNavigator({
     screen: Home
   },
   Nearby: {
-    screen: Nearby
+    screen: NearBy
   },
   Walk: {
     screen: Walk,
@@ -100,11 +97,13 @@ const MyApp = TabNavigator({
     screen: Me,
   },
 }, {
+  initialRouteName: 'Nearby',
   tabBarOptions: {
     activeTintColor: '#20C0AC',
     labelStyle: {
       fontSize: 14
     },
+
     style: {
       height: 50,
       paddingBottom: 2,

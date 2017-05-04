@@ -11,45 +11,91 @@ import {
 } from 'react-native';
 
 import data from '../../../data/home.json'
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 let {data: {homepage, activity, likes}} = data
 const { width, height } = Dimensions.get('window');
 
-likes = likes.map(like => {
+
+
+newlikes = likes.slice().map(like => {
   like.key = like.id;
   return like;
 })
+
+const addLike = () => {
+  let result = [];
+  for(let i = 0; i < 10; i++) {
+    let obj = {
+      "name": "汇合国际影城",
+      "dist": "10.5",
+      "des": "[宋城] 杭州宋城景区门票+19:20贵宾席成人票，请至少当天9点前购买",
+      "price": 290,
+      "retailPrice": 310,
+      "sold": 1022
+    }
+    let id = parseInt(Math.random() * 1000000);
+    
+    obj.key = id;
+    obj.id = id; 
+
+    result.push(obj)
+  }
+
+  return result
+}
+
 export default class Home extends Component {
   
   constructor(props) {
     super(props);
 
     this.state = {
-      y: new Animated.Value(0)
+      y: new Animated.Value(0),
+      list: newlikes
     }
   }   
+  
+  loadMore(info) {
+    
+
+    let list = this.state.list.slice(0);
+    let nowList = addLike(list);
+    list.push(...nowList);
+    console.log(list)
+    this.setState({
+      list: list
+    })
+    // this.setState((prevState, props) => {
+    //   let { list }  = prevState;
+    //   console.log(list);
+    //   let newList = list.slice();
+    //   let nowList = addLike(newList);
+    //   console.log(list.push(nowList))
+    //   return {list: list};
+    // })
+  }
 
 	render() {
     return (
       <View style={styles.container}>
         <HomeHeader y={this.state.y}/>
-        <Animated.ScrollView 
-          scrollEventThrottle={1} // <-- Use 1 here to make sure no events are ever missed
-          onScroll={
+        <AnimatedFlatList
+          data={this.state.list}
+          scrollEventThrottle={1}
+          onScroll = {
             Animated.event(
               [{ nativeEvent: { contentOffset: { y: this.state.y } } }],
-              
+              {useNativeDriver: true}
             )
           }
-        > 
-          <View style={{height: 100, backgroundColor: 'green'}}></View>
-          <Slider />
-          <Activity />
-          <FlatList
-            data={likes}
-            ListHeaderComponent={ListHeader}
-          	renderItem={thinkYouLike}
-          />
-        </Animated.ScrollView>
+          refreshing={false}
+          onEndReachedThreshold={0.5}
+          onRefresh={() => console.log('refresh')}
+          onEndReached={this.loadMore.bind(this)}
+          ListHeaderComponent={ListHeader}
+          ItemSeparatorComponent={ListItemSeparator}
+        	renderItem={thinkYouLike}
+        />
       </View>
     );
   }
@@ -60,13 +106,18 @@ export default class Home extends Component {
 }
 
 const HomeHeader = ({y}) => {
+  // let opacity = y.interpolate({
+  //   inputRange: [0, 200, 300],
+  //   outputRange: ['rgba(0, 0, 0, 0)', '#20c0ad', '#20c0ad'],
+  // });
   let opacity = y.interpolate({
-    inputRange: [0, 200, 300],
-    outputRange: ['rgba(0, 0, 0, 0)', '#20c0ad', '#20c0ad'],
+    inputRange: [0, 200],
+    outputRange: [0, 1]
   });
   console.log('aaaaa', y)
 	return (
-		<Animated.View style={[styles.header, {backgroundColor: opacity}]}>
+		<Animated.View style={[styles.header]}>
+      <Animated.View style={[styles.header_layer, { opacity: opacity}]}></Animated.View>
       <View style={styles.header_wrap}>
         <Text style={[styles.text, styles.address]}>杭州&#xe632;</Text>
         <View style={styles.search}><Text style={[styles.text, styles.search_txt]}>&#xe630;火锅</Text></View>
@@ -162,12 +213,21 @@ const thinkYouLike = ({item}) => {
 
 const ListHeader = () => {
   return (
-    <View style={styles.list_header}>
-      <View style={styles.list_title_line}>
-        <Text style={styles.list_title_name}>猜你喜欢</Text>
+    <View>
+      <View style={{height: 100, backgroundColor: 'green'}}></View>
+      <Slider />
+      <Activity />
+      <View style={styles.list_header}>
+        <View style={styles.list_title_line}>
+          <Text style={styles.list_title_name}>猜你喜欢</Text>
+        </View>
       </View>
     </View>
   )
+}
+
+const ListItemSeparator = () => {
+  return <View style={{height: 1, backgroundColor: '#ebebeb'}}></View>
 }
 
 const styles = StyleSheet.create({
@@ -184,11 +244,19 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     paddingLeft: 10,
     paddingRight: 8,
-    // backgroundColor: '#21c0ad',
+    backgroundColor: 'transparent'
+  },
+  header_layer: {
+    height: 60,
+    position: 'absolute',
+    width: width,
+    backgroundColor: '#21c0ad',
+    opacity: 0
   },
   header_wrap: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   text: {
     fontFamily: 'iconfont',
@@ -280,7 +348,7 @@ const styles = StyleSheet.create({
   like_list_item: {
     flex: 1,
 		flexDirection: 'row',
-		borderTopWidth: 1,
+		// borderTopWidth: 1,
 		borderColor: '#ebebeb',
 		padding: 10,
 		backgroundColor: '#fff'
@@ -335,7 +403,9 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: '#ebebeb',
   },
   list_title_line: {
     width: 92,
