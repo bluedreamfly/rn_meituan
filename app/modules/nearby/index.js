@@ -27,7 +27,7 @@ export default class NearBy extends Component {
   	this.state = {
   		current: 0,
   		pos: new Animated.Value(0),
-  		// listLeft: new Animated.Value(0),
+  		list: [{key: '1'}, {key: '2'},{key: '3'},{key: '4'}],
   	}
   }
   
@@ -42,14 +42,6 @@ export default class NearBy extends Component {
 		    duration: 200                            
 		  }
 		).start();
-
-		// Animated.timing(                           
-		//   this.state.listLeft,                     
-		//   {
-		//     toValue: -index * width,
-		//     duration: 200                            
-		//   }
-		// ).start();  
   }
 
   loadMore() {
@@ -83,11 +75,13 @@ export default class NearBy extends Component {
         
         <Animated.View style={[styles.list_wrap, { left: listLeft}]}>
           { TAG_CATE.map((cate, index) => {
-          	return <View style={styles.list} key={index}>
+          	return <View style={[styles.list]} key={index} >
           	  <Text>{cate}</Text>
 	          	<FlatList
 			          data={list}
-								style={{flex: 1}}
+			          ref={`${cate}`}
+								 pagingEnabled={true}
+			          
 			          refreshing={false}
 			          onEndReachedThreshold={0.5}
 			          onRefresh={() => console.log('refresh')}
@@ -124,7 +118,7 @@ const ListHeader = ({tags}) => {
 
 const ListItem = () => {
 	return (
-		<View style={{height: 40}}>hell world</View>
+		<View style={{height: 40}}><Text>hell world</Text></View>
 	)
 }
 
@@ -171,8 +165,11 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	list: {
+		// position: 'absolute',
+		// zIndex: 200,
+
 		width: width,
-		flex: 1
+		// flex: 1
 	},
 	tags: {
 		flexDirection: 'row',
