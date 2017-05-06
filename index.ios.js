@@ -21,7 +21,7 @@ import {
 
 import Home from './app/modules/home'
 import NearBy from './app/modules/nearby'
-
+import User from './app/modules/user'
 
 Home.navigationOptions = {
   tabBarLabel: '首页',
@@ -62,11 +62,9 @@ Order.navigationOptions = {
   )
 }
 
-const Me = ({ navigation}) => {
-  return <View><Text>Order</Text></View> 
-}
 
-Me.navigationOptions = {
+
+User.navigationOptions = {
   tabBarLabel: '我的',
   tabBarIcon: ({ tintColor }) => (
     <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe609;</Text>
@@ -94,10 +92,10 @@ const MyApp = TabNavigator({
     screen: Order,
   },
   Me: {
-    screen: Me,
+    screen: User,
   },
 }, {
-  initialRouteName: 'Nearby',
+  initialRouteName: 'Me',
   tabBarOptions: {
     activeTintColor: '#20C0AC',
     labelStyle: {

@@ -77,19 +77,7 @@ export default class NearBy extends Component {
           { TAG_CATE.map((cate, index) => {
           	return <View style={[styles.list]} key={index} >
           	  <Text>{cate}</Text>
-	          	<FlatList
-			          data={list}
-			          ref={`${cate}`}
-								 pagingEnabled={true}
-			          
-			          refreshing={false}
-			          onEndReachedThreshold={0.5}
-			          onRefresh={() => console.log('refresh')}
-			          onEndReached={this.loadMore.bind(this)}
-			          ListHeaderComponent={() => ListHeader({tags: TAGS[cate]})}
-			          ItemSeparatorComponent={ListItemSeparator}
-			        	renderItem={ListItem}
-			        />
+	          	<List list={list} cate={cate} />
 			      </View>	
           })}
         	
@@ -114,6 +102,19 @@ const ListHeader = ({tags}) => {
 		  }
 		</View>
 	)
+}
+
+const List = ({list, cate}) => {
+	return <FlatList
+						data={list}
+						pagingEnabled={true}
+						refreshing={false}
+						onEndReachedThreshold={0.5}
+						onRefresh={() => console.log('refresh')}
+						ListHeaderComponent={() => ListHeader({tags: TAGS[cate]})}
+						ItemSeparatorComponent={ListItemSeparator}
+						renderItem={ListItem}
+					/>
 }
 
 const ListItem = () => {
@@ -160,8 +161,8 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fc6a80'
 	},
 	list_wrap: {
-		flexDirection: 'row',
-		width: width * 4,
+		// flexDirection: 'row',
+		// width: width * 4,
 		flex: 1
 	},
 	list: {

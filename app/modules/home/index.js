@@ -17,10 +17,10 @@ const { width, height } = Dimensions.get('window');
 
 
 
-newlikes = likes.slice().map(like => {
-  like.key = like.id;
-  return like;
-})
+// newlikes = likes.slice().map(like => {
+//   like.key = like.id;
+//   return like;
+// })
 
 const addLike = () => {
   let result = [];
@@ -35,7 +35,7 @@ const addLike = () => {
     }
     let id = parseInt(Math.random() * 1000000);
     
-    obj.key = id;
+    // obj.key = id;
     obj.id = id; 
 
     result.push(obj)
@@ -51,7 +51,7 @@ export default class Home extends Component {
 
     this.state = {
       y: new Animated.Value(0),
-      list: newlikes
+      list: likes
     }
   }   
   
@@ -88,6 +88,7 @@ export default class Home extends Component {
               {useNativeDriver: true}
             )
           }
+          keyExtractor={item => item.id}
           refreshing={false}
           onEndReachedThreshold={0.5}
           onRefresh={() => console.log('refresh')}
