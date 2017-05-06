@@ -8,18 +8,22 @@ import {
   TouchableOpacity,
   Animated
 } from 'react-native'
+import Icon from '../../components/icon'
 
 const linkList = {
   first: [
-    {icon: '&#xe639;', color: '#fd9527', title: '我的钱包', after: '办信用卡'},
-    {icon: '&#xe65f;', color: '#fa9528', title: '余额', after: '0.00'},
-    {icon: '&#xe601;', color: '#8b96fc', title: '抵用券', after: '0'},
-    {icon: '&#xe628;', color: '#8b96fc', title: '卡包', after: '0'},
+    {icon: 'wallet', color: '#fd9527', title: '我的钱包', after: '办信用卡'},
+    {icon: 'balance', color: '#fa9528', title: '余额', after: '0.00'},
+    {icon: 'diyongquan', color: '#8b96fc', title: '抵用券', after: '0'},
+    {icon: 'card-package', color: '#8b96fc', title: '卡包', after: '0'},
   ]
 }
+// 58942
+// &#xe63e;
 
 export default class User extends Component {
   render() {
+    
     return (
       <View style={styles.container}>
         <View>
@@ -47,8 +51,8 @@ const Header = () => {
         />
       </View>
       <View >
-        <Text style={[styles.username, styles.txt]}>ajb83129066</Text>
-        <Text style={[styles.tip, styles.txt]}>个人信息&#xe644;</Text>
+        <Text style={[styles.username]}>ajb83129066</Text>
+        <Text style={[styles.tip]}>个人信息&#xe644;</Text>
       </View>
     </View>
   </TouchableOpacity>
@@ -56,14 +60,14 @@ const Header = () => {
 
 const CardItem = ({data: {icon, title, after, color}}) => {
   return <View>
-    <Text><Text style={[{color: color}, styles.txt]}>{icon}</Text>{title}</Text>
-    <Text style={styles.txt}>{after} &#xe644;</Text>
+    <Text><Icon name={icon} style={[{color: color}]} />{title}</Text>
+    <Text style={styles.txt}>{after} <Icon name="arrow-right" style={{}}/></Text>
   </View>
 }
 
 const CardList = ({list}) => {
-  return list.map(item => {
-    return <CardItem data={item}/>
+  return list.map((item, index) => {
+    return <CardItem  key={index} data={item}/>
   })
 }
 
