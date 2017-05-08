@@ -56,7 +56,6 @@ export default class Home extends Component {
   }   
   
   loadMore(info) {
-    
 
     let list = this.state.list.slice(0);
     let nowList = addLike(list);
@@ -215,7 +214,10 @@ const thinkYouLike = ({item}) => {
 const ListHeader = () => {
   return (
     <View>
-      <View style={{height: 100, backgroundColor: 'green'}}></View>
+      <Image 
+        source={{uri: 'http://p1.meituan.net/codeman/b7241aa85b613bdcc77c1b9b1592b7ed477488.png'}}
+        style={{width: width, height: 180}}
+      />
       <Slider />
       <Activity />
       <View style={styles.list_header}>
@@ -233,7 +235,10 @@ const ListItemSeparator = () => {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    zIndex: 200,
     flex: 1,
+    height: height,
     backgroundColor: '#efefef'
   },
   header: {

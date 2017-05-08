@@ -27,19 +27,41 @@ export default class NearBy extends Component {
   	this.state = {
   		current: 0,
   		pos: new Animated.Value(0),
-  		list: [{key: '1'}, {key: '2'},{key: '3'},{key: '4'}],
+  		// list: [{key: '1'}, {key: '2'},{key: '3'},{key: '4'}],
+      listData: {
+        eat: {
+          list: [{key: '1'}, {key: '2'},{key: '3'},{key: '4'}],
+          refresh: true
+        },
+        live: {
+          list: [{key: '1'}, {key: '2'},{key: '3'},{key: '4'}],
+          refresh: true
+        },
+        play: {
+          list: [{key: '1'}, {key: '2'},{key: '3'},{key: '4'}],
+          refresh: true
+        },
+        all: {
+          list: [{key: '1'}, {key: '2'},{key: '3'},{key: '4'}],
+          refresh: true
+        },
+      }
   	}
   }
   
   changeTab(index) {
+    let { listData } = this.state;
+    listData[TAG_CATE[index]].refresh = false;
   	this.setState({
-  		current: index
+  		current: index,
+      listData: listData
   	})
+
   	Animated.timing(                           
 		  this.state.pos,                     
 		  {
 		    toValue: index,
-		    duration: 200                            
+		    duration: 300                            
 		  }
 		).start();
   }
@@ -48,8 +70,10 @@ export default class NearBy extends Component {
 
   }
 
+  // componentDidMount
+
   render() {
-  	const { current, pos, list } = this.state;
+  	const { current, pos, listData } = this.state;
   	let lineLeft = pos.interpolate({
 	    inputRange: [0, 1, 2, 3],
 	    outputRange: [0, width /4, 2 * width / 4, 3* width / 4]
@@ -70,14 +94,13 @@ export default class NearBy extends Component {
 		  				</TouchableOpacity>
 	  			  })}
   			  </View>
-  			  <Animated.View style={[styles.tab_line, { left: lineLeft}]}></Animated.View>
+  			  <Animated.View style={[styles.tab_line, { transform: [{translateX: lineLeft}]}]}></Animated.View>
   			</View>
         
-        <Animated.View style={[styles.list_wrap, { left: listLeft}]}>
+        <Animated.View style={[styles.list_wrap, {left: listLeft }]}>
           { TAG_CATE.map((cate, index) => {
           	return <View style={[styles.list]} key={index} >
-          	  <Text>{cate}</Text>
-	          	<List list={list} cate={cate} />
+	          	<List list={listData[cate]} cate={cate} />
 			      </View>	
           })}
         	
@@ -106,9 +129,9 @@ const ListHeader = ({tags}) => {
 
 const List = ({list, cate}) => {
 	return <FlatList
-						data={list}
+						data={list.list}
 						pagingEnabled={true}
-						refreshing={false}
+						refreshing={list.refresh}
 						onEndReachedThreshold={0.5}
 						onRefresh={() => console.log('refresh')}
 						ListHeaderComponent={() => ListHeader({tags: TAGS[cate]})}
@@ -132,7 +155,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#f1f1f4',
-		marginTop: 22
+		marginTop: 22,
+    overflow: 'hidden'
 	},
 	tabs: {
 		flexDirection: 'row',
@@ -161,13 +185,13 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fc6a80'
 	},
 	list_wrap: {
-		// flexDirection: 'row',
-		// width: width * 4,
+		flexDirection: 'row',
+		width: width * 4,
 		flex: 1
 	},
 	list: {
 		// position: 'absolute',
-		// zIndex: 200,
+		// zIndex: 1,
 
 		width: width,
 		// flex: 1

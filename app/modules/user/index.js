@@ -6,35 +6,55 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   Animated
 } from 'react-native'
 import Icon from '../../components/icon'
 
-const linkList = {
-  first: [
+const linkList = [
+  [
     {icon: 'wallet', color: '#fd9527', title: '我的钱包', after: '办信用卡'},
     {icon: 'balance', color: '#fa9528', title: '余额', after: '0.00'},
     {icon: 'diyongquan', color: '#8b96fc', title: '抵用券', after: '0'},
     {icon: 'card-package', color: '#8b96fc', title: '卡包', after: '0'},
+  ],
+  [
+    {icon: 'user', color: '#6bb7fb', title: '好友去哪'},
+    {icon: 'evaluate', color: '#6bb7fb', title: '我的评价'},
+    {icon: 'collect', color: '#fd5d6f', title: '我的收藏'},
+    {icon: 'vip', color: '#fd5d6f', title: '会员中心', after: 'v1'},
+    {icon: 'points-mall', color: '#fd5d6f', title: '积分商城', after: '0元礼包已上线'},
+  ],
+  [
+    {icon: 'customer-service', color: '#86d359', title: '客服中心'},
+    {icon: 'cooperation', color: '#6bb7fb', title: '我要合作'},
+    {icon: 'about', color: '#21c1ab', title: '关于美团'},
   ]
-}
-// 58942
-// &#xe63e;
+]
 
 export default class User extends Component {
+  static navigationOptions = {
+    title: 'Home',
+    header: () => {
+      return <View style={styles.title_header}>
+        <View style={styles.title_name}>
+          <Icon name="setting" style={styles.title_icon}/>
+          <Icon name="notice" style={styles.title_icon}/>
+        </View>
+      </View>
+    }
+  }
   render() {
-    
+    console.log(this.props);
     return (
       <View style={styles.container}>
-        <View>
-          <TouchableOpacity><Text>设置</Text></TouchableOpacity>
-          <TouchableOpacity><Text>通知</Text></TouchableOpacity>
-        </View>
         <Animated.ScrollView >
           <Header />
-          {CardList({list: linkList.first})}
-          {CardList({list: []})}
-          {CardList({list: []})}
+          {
+            linkList.map((item, index) => {
+              return <CardList key={index} list={item} navigation={this.props.navigation}/>
+            })
+          }
         </Animated.ScrollView>
       </View>
     )
@@ -58,31 +78,58 @@ const Header = () => {
   </TouchableOpacity>
 }
 
-const CardItem = ({data: {icon, title, after, color}}) => {
-  return <View>
-    <Text><Icon name={icon} style={[{color: color}]} />{title}</Text>
-    <Text style={styles.txt}>{after} <Icon name="arrow-right" style={{}}/></Text>
+const TitleHeader = () => {
+  return <View><View></View></View>
+}
+
+const CardItem = ({data: {icon, title, after, color}, navigation}) => {
+  return <TouchableHighlight onPress={() => navigation.navigate('MyWallet')}>
+    <View style={styles.card_item}>
+      <Text><Icon name={icon} style={[{color: color}, {fontSize: 16, marginRight: 10}]} />{title}</Text>
+      <Text style={styles.txt}>{after} <Icon name="right-arrow" /></Text>
+    </View>
+  </TouchableHighlight>
+}
+
+const CardList = ({list, navigation}) => {
+  return <View style={styles.card_list}>
+    { list.map((item, index) => {
+      return <CardItem  key={index} data={item} navigation={navigation}/>
+    })}
   </View>
 }
 
-const CardList = ({list}) => {
-  return list.map((item, index) => {
-    return <CardItem  key={index} data={item}/>
-  })
-}
-
 const styles = StyleSheet.create({
-  constainer: {
-    // flex: 1
+  container: {
+    flex: 1,
+    backgroundColor: '#f4f4f4'
+  },
+  title_header: {
+    // paddingTop: 20,
+    height: 60,
+    backgroundColor: '#21c0ad',
+    // backgroundColor: 'red',
+  },
+  title_name: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 20,
+    flex: 1
+  },
+  title_icon: {
+    fontSize: 20,
+    color: '#fff',
+    marginRight: 10
   },
   header: {
-    height: 150,
+    height: 90,
     backgroundColor: '#21c0ad',
     paddingLeft: 10
   },
   header_wrap: {
     flexDirection: 'row',
-    marginTop: 68,
+    marginTop: 8,
     alignItems: 'center'
   },
   header_avator: {
@@ -102,6 +149,20 @@ const styles = StyleSheet.create({
   tip: {
     color: '#fff',
     fontSize: 12
+  },
+  card_list: {
+    marginBottom: 10
+  },
+  card_item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: 45,
+    borderBottomWidth: 1,
+    borderColor: '#f4f4f4',
+    backgroundColor: '#fff',
+    paddingLeft: 15,
+    paddingRight: 15
   },
   txt: {
     fontFamily: 'iconfont'

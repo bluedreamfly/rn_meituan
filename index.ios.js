@@ -12,7 +12,8 @@ import {
   ScrollView,
   Dimensions,
   View,
-  Image
+  Image,
+  TabBarIOS
 } from 'react-native';
 
 import {
@@ -22,7 +23,7 @@ import {
 import Home from './app/modules/home'
 import NearBy from './app/modules/nearby'
 import User from './app/modules/user'
-
+import { UserStack } from './app/router'
 Home.navigationOptions = {
   tabBarLabel: '首页',
   tabBarIcon: ({ tintColor }) => (
@@ -52,7 +53,7 @@ Walk.navigationOptions = {
 }
 
 const Order = ({ navigation}) => {
-  return <View><Text>Order</Text></View> 
+  return <View style={{flex: 1, height: 500}}><Text>Order</Text></View> 
 }
 
 Order.navigationOptions = {
@@ -64,7 +65,7 @@ Order.navigationOptions = {
 
 
 
-User.navigationOptions = {
+UserStack.navigationOptions = {
   tabBarLabel: '我的',
   tabBarIcon: ({ tintColor }) => (
     <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe609;</Text>
@@ -77,7 +78,73 @@ MyNotificationsScreen.navigationOptions = {
     <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe770;</Text>
   )
 }
+/*class MyApp extends Component {
 
+  static title = '<TabBarIOS>';
+  static description = 'Tab-based navigation.';
+  static displayName = 'TabBarExample';
+
+  state = {
+    selectedTab: 'redTab',
+    notifCount: 0,
+    presses: 0,
+  };
+  render() {
+     return (<TabBarIOS
+        unselectedTintColor="yellow"
+        tintColor="white"
+        unselectedItemTintColor="red"
+        barTintColor="darkslateblue">
+        <TabBarIOS.Item
+          systemIcon="history"
+          selected={this.state.selectedTab === 'blueTab'}
+          onPress={() => {
+            this.setState({
+              selectedTab: 'blueTab',
+            });
+          }}>
+          <Home />
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+          systemIcon="history"
+          badge={this.state.notifCount > 0 ? this.state.notifCount : undefined}
+          badgeColor="black"
+          selected={this.state.selectedTab === 'redTab'}
+          onPress={() => {
+            this.setState({
+              selectedTab: 'redTab',
+              notifCount: this.state.notifCount + 1,
+            });
+          }}>
+          <NearBy />
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+          systemIcon="history"
+          renderAsOriginal
+          title="More"
+          selected={this.state.selectedTab === 'greenTab'}
+          onPress={() => {
+            this.setState({
+              selectedTab: 'greenTab',
+              presses: this.state.presses + 1
+            });
+          }}>
+          <Walk />
+        </TabBarIOS.Item>
+      </TabBarIOS>)
+  }
+}
+
+var styles = StyleSheet.create({
+  tabContent: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  tabText: {
+    color: 'white',
+    margin: 50,
+  },
+});*/
 const MyApp = TabNavigator({
   Home: {
     screen: Home
@@ -92,7 +159,7 @@ const MyApp = TabNavigator({
     screen: Order,
   },
   Me: {
-    screen: User,
+    screen: UserStack,
   },
 }, {
   initialRouteName: 'Me',
