@@ -19,175 +19,97 @@ import {
 import {
   TabNavigator
 } from 'react-navigation'
-
+import { Navigation } from 'react-native-navigation';
+import iconMap from './fonts/map'
 import Home from './app/modules/home'
 import NearBy from './app/modules/nearby'
 import User from './app/modules/user'
-import { UserStack } from './app/router'
-Home.navigationOptions = {
-  tabBarLabel: '首页',
-  tabBarIcon: ({ tintColor }) => (
-    <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe79d;</Text>
-  )
-}
-const MyNotificationsScreen = ({ navigation }) => {
-  return <View><Text>hello world</Text></View>
-}
+import MyWallet from './app/modules/user/mywallet'
 
-
-NearBy.navigationOptions = {
-  tabBarLabel: '附近',
-  tabBarIcon: ({ tintColor }) => (
-    <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe770;</Text>
-  )
-}
 const Walk = ({ navigation}) => {
+  return <View style={{flex: 1}}><Text>Walk</Text></View> 
+}
+const Order = ({ navigation}) => {
   return <View><Text>Walk</Text></View> 
 }
 
-Walk.navigationOptions = {
-  tabBarLabel: '逛一逛',
-  tabBarIcon: ({ tintColor }) => (
-    <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe629;</Text>
-  )
+function registerScreens() {
+	Navigation.registerComponent('meituan.Home', () => Home);
+	Navigation.registerComponent('meituan.NearBy', () => NearBy);
+	Navigation.registerComponent('meituan.Walk', () => Walk);
+	Navigation.registerComponent('meituan.Order', () => Order);
+	Navigation.registerComponent('meituan.User', () => User);
+  Navigation.registerComponent('user.mywallet', () => MyWallet)
 }
+registerScreens();
+const navigatorStyle = {
+	navBarTranslucent: false,
+	drawUnderNavBar: false,
+	navBarTextColor: '#000',
+	navBarButtonColor: '#000',
+	statusBarTextColorScheme: 'light',
+	// drawUnderTabBar: false,
+  drawUnderTabBar: true,
+  navBarBackgroundColor: '#f7f7f7',
+  // navBarHideOnScroll: true,
+  navBarHidden: true,
+  // height: 0
+};
 
-const Order = ({ navigation}) => {
-  return <View style={{flex: 1, height: 500}}><Text>Order</Text></View> 
+class App extends Component {
+	constructor(props) {
+		super(props);
+		// iconsLoaded.then(() => {
+		// 	this.startApp();
+		// });
+    this.startApp();
+	}
+
+	startApp() {
+		Navigation.startTabBasedApp({
+			tabs: [
+				{
+					label: '首页',
+					screen: 'meituan.Home',
+					// icon: iconMap['home'],
+					// selectedIcon: iconsMap['ios-film'],
+          navigatorStyle
+				},
+				{
+					label: '附近',
+					screen: 'meituan.NearBy',
+          navigatorStyle
+					// icon: iconMap['nearby'],
+					// selectedIcon: iconsMap['ios-desktop'],
+				},
+        {
+					label: '我的',
+					screen: 'meituan.User',
+          style: {
+            flex: 1
+          },
+          navigatorStyle: {
+            drawUnderTabBar: true,
+          },
+					// icon: iconMap['nearby'],
+					// selectedIcon: iconsMap['ios-desktop'],
+					
+				}
+			],
+      // appStyle: {
+      //   tabBarBackgroundColor: '#0f2362',
+      //   tabBarButtonColor: '#ffffff',
+      //   tabBarSelectedButtonColor: '#63d7cc',
+      //   tabFontFamily: 'BioRhyme-Bold',
+      //   forceTitlesDisplay: true
+      // },
+			tabsStyle: {
+				tabBarButtonColor: 'white',
+				tabBarSelectedButtonColor: 'white',
+				tabBarBackgroundColor: '#ccc',
+        tabBarTranslucent: false
+			}
+		});
+	}
 }
-
-Order.navigationOptions = {
-  tabBarLabel: '订单',
-  tabBarIcon: ({ tintColor }) => (
-    <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe622;</Text>
-  )
-}
-
-
-
-UserStack.navigationOptions = {
-  tabBarLabel: '我的',
-  tabBarIcon: ({ tintColor }) => (
-    <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe609;</Text>
-  )
-}
-
-MyNotificationsScreen.navigationOptions = {
-  tabBarLabel: '首页',
-  tabBarIcon: ({ tintColor }) => (
-    <Text style={[styles.tab_icon, { color: tintColor}]}>&#xe770;</Text>
-  )
-}
-/*class MyApp extends Component {
-
-  static title = '<TabBarIOS>';
-  static description = 'Tab-based navigation.';
-  static displayName = 'TabBarExample';
-
-  state = {
-    selectedTab: 'redTab',
-    notifCount: 0,
-    presses: 0,
-  };
-  render() {
-     return (<TabBarIOS
-        unselectedTintColor="yellow"
-        tintColor="white"
-        unselectedItemTintColor="red"
-        barTintColor="darkslateblue">
-        <TabBarIOS.Item
-          systemIcon="history"
-          selected={this.state.selectedTab === 'blueTab'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'blueTab',
-            });
-          }}>
-          <Home />
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          systemIcon="history"
-          badge={this.state.notifCount > 0 ? this.state.notifCount : undefined}
-          badgeColor="black"
-          selected={this.state.selectedTab === 'redTab'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'redTab',
-              notifCount: this.state.notifCount + 1,
-            });
-          }}>
-          <NearBy />
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          systemIcon="history"
-          renderAsOriginal
-          title="More"
-          selected={this.state.selectedTab === 'greenTab'}
-          onPress={() => {
-            this.setState({
-              selectedTab: 'greenTab',
-              presses: this.state.presses + 1
-            });
-          }}>
-          <Walk />
-        </TabBarIOS.Item>
-      </TabBarIOS>)
-  }
-}
-
-var styles = StyleSheet.create({
-  tabContent: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  tabText: {
-    color: 'white',
-    margin: 50,
-  },
-});*/
-const MyApp = TabNavigator({
-  Home: {
-    screen: Home
-  },
-  Nearby: {
-    screen: NearBy
-  },
-  Walk: {
-    screen: Walk,
-  },
-  Order: {
-    screen: Order,
-  },
-  Me: {
-    screen: UserStack,
-  },
-}, {
-  initialRouteName: 'Me',
-  tabBarOptions: {
-    activeTintColor: '#20C0AC',
-    labelStyle: {
-      fontSize: 14
-    },
-
-    style: {
-      height: 50,
-      paddingBottom: 2,
-      borderTopWidth: 1,
-      borderTopColor: '#ccc'
-    }
-  },
-});
-
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: 'iconfont',
-    color: '#fff'
-  },
-  tab_icon: {
-    fontFamily: 'iconfont', 
-    fontSize: 20
-  }
-});
-
-AppRegistry.registerComponent('Meituan', () => MyApp);
+new App()

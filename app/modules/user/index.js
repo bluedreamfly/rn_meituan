@@ -26,6 +26,20 @@ const linkList = [
     {icon: 'points-mall', color: '#fd5d6f', title: '积分商城', after: '0元礼包已上线'},
   ],
   [
+    {icon: 'user', color: '#6bb7fb', title: '好友去哪'},
+    {icon: 'evaluate', color: '#6bb7fb', title: '我的评价'},
+    {icon: 'collect', color: '#fd5d6f', title: '我的收藏'},
+    {icon: 'vip', color: '#fd5d6f', title: '会员中心', after: 'v1'},
+    {icon: 'points-mall', color: '#fd5d6f', title: '积分商城', after: '0元礼包已上线'},
+  ],
+  [
+    {icon: 'user', color: '#6bb7fb', title: '好友去哪'},
+    {icon: 'evaluate', color: '#6bb7fb', title: '我的评价'},
+    {icon: 'collect', color: '#fd5d6f', title: '我的收藏'},
+    {icon: 'vip', color: '#fd5d6f', title: '会员中心', after: 'v1'},
+    {icon: 'points-mall', color: '#fd5d6f', title: '积分商城', after: '0元礼包已上线'},
+  ],
+  [
     {icon: 'customer-service', color: '#86d359', title: '客服中心'},
     {icon: 'cooperation', color: '#6bb7fb', title: '我要合作'},
     {icon: 'about', color: '#21c1ab', title: '关于美团'},
@@ -33,7 +47,7 @@ const linkList = [
 ]
 
 export default class User extends Component {
-  static navigationOptions = {
+  /*static navigationOptions = {
     title: 'Home',
     header: () => {
       return <View style={styles.title_header}>
@@ -43,19 +57,50 @@ export default class User extends Component {
         </View>
       </View>
     }
+  }*/
+  constructor(props) {
+    super(props);
+    props.navigator.toggleTabs({
+      to: 'shown', 
+      animated: true 
+    });
+    this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
+
+  onNavigatorEvent(e) {
+    console.log(e)
+    if (e.id === 'willAppear') {
+      this.props.navigator.toggleTabs({
+        to: 'shown', 
+        // animated: true 
+      });
+       this.props.navigator.toggleNavBar({
+        to: 'hidden', 
+        // animated: true 
+      });
+    }
+    // if (e.id === 'willDisappear') {
+    //   this.props.navigator.toggleTabs({
+    //     to: 'hidden', 
+    //     // animated: true 
+    //   });
+    // }
+  }
+  
   render() {
-    console.log(this.props);
+    
     return (
       <View style={styles.container}>
-        <Animated.ScrollView >
+        <ScrollView style={{height: 0}}>
+          <View >
           <Header />
           {
             linkList.map((item, index) => {
-              return <CardList key={index} list={item} navigation={this.props.navigation}/>
+              return <CardList key={index} list={item} navigation={this.props.navigator}/>
             })
           }
-        </Animated.ScrollView>
+          </View>
+        </ScrollView>
       </View>
     )
   }
@@ -82,8 +127,17 @@ const TitleHeader = () => {
   return <View><View></View></View>
 }
 
+const link = (navigator) => {
+  navigator.push({ screen: 'user.mywallet', animated: true, title: '我的钱包', navigatorStyle: {drawUnderTabBar: true}});
+  // navigator.toggleTabs({
+  //   to: 'hidden', 
+  //   // animated: true 
+  // });
+}
+
+
 const CardItem = ({data: {icon, title, after, color}, navigation}) => {
-  return <TouchableHighlight onPress={() => navigation.navigate('MyWallet')}>
+  return <TouchableHighlight onPress={() => link(navigation)}>
     <View style={styles.card_item}>
       <Text><Icon name={icon} style={[{color: color}, {fontSize: 16, marginRight: 10}]} />{title}</Text>
       <Text style={styles.txt}>{after} <Icon name="right-arrow" /></Text>
@@ -102,6 +156,7 @@ const CardList = ({list, navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // height: 0,
     backgroundColor: '#f4f4f4'
   },
   title_header: {

@@ -23,7 +23,9 @@ export default class NearBy extends Component {
 
   constructor(props) {
   	super(props);
-  	
+  	props.navigator.toggleNavBar({
+      to: 'hidden'
+    });
   	this.state = {
   		current: 0,
   		pos: new Animated.Value(0),

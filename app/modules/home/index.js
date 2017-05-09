@@ -53,6 +53,9 @@ export default class Home extends Component {
       y: new Animated.Value(0),
       list: likes
     }
+    // props.navigator.toggleNavBar({
+    //   to: 'hidden'
+    // });
   }   
   
   loadMore(info) {
@@ -61,9 +64,11 @@ export default class Home extends Component {
     let nowList = addLike(list);
     list.push(...nowList);
     console.log(list)
+    if (list.length > 20) return;
     this.setState({
       list: list
     })
+
     // this.setState((prevState, props) => {
     //   let { list }  = prevState;
     //   console.log(list);
@@ -81,6 +86,7 @@ export default class Home extends Component {
         <AnimatedFlatList
           data={this.state.list}
           scrollEventThrottle={1}
+          style={{height: 0, marginBottom: 50}}
           onScroll = {
             Animated.event(
               [{ nativeEvent: { contentOffset: { y: this.state.y } } }],
